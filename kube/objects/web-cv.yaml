@@ -35,7 +35,7 @@ metadata:
     app: my-cv
     app: web
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: web
@@ -83,7 +83,7 @@ metadata:
     app: my-cv
     app: nginx
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: nginx
