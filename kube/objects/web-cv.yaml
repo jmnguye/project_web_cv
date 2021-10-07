@@ -100,11 +100,6 @@ spec:
       labels:
         app: web
     spec:
-      volumes:
-        - name: static
-          nfs:
-            server: diskstation.lan
-            path: /volume1/docker_web/my_cv/static
       containers:
       - image: docker-registry.lan/django_cv_web:latest
         name: web
@@ -164,15 +159,15 @@ spec:
         app: nginx
     spec:
       volumes:
-        - name: static
+        - name: mycv
           nfs:
             server: diskstation.lan
-            path: /volume1/docker_web/my_cv/static
+            path: /volume1/docker_web/my_cv
       containers:
       - image: docker-registry.lan/django_cv_nginx:latest
         volumeMounts:
-          - name: static
-            mountPath: /usr/src/app/django/my_cv/static
+          - name: mycv
+            mountPath: /usr/src/app/django/my_cv
         name: nginx
         ports:
           - name: web
