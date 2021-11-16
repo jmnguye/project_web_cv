@@ -3,6 +3,23 @@
 # DEBUG
 # DJANGO_ALLOWED_HOSTS
 # SECRET_KEY
+# DATABASE_ENGINE
+# DATABASE_PASSWORD
+# DATABAE_HOST
+# POSTGRES_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lb-pgsql
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: pgsql
+  type: LoadBalancer
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -14,6 +31,45 @@ spec:
       targetPort: 8000
   selector:
     app: web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgsql
+  labels:
+    apps: pgsql
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: pgsql
+  template:
+    metadata:
+      labels:
+        app: pgsql
+    spec:
+      volumes:
+        - name: data
+          nfs:
+            server: diskstation.lan
+            path: /volume1/docker_db/my_cv/data
+      containers:
+      - image: postgres:13.4
+        name: postgres
+        volumeMounts:
+          - name: data
+            mountPath: /var/lib/postgresql/data
+        env:
+          - name: PGDATA
+            value: /var/lib/postgresql/data/pgdata
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: config-env-file
+                key: POSTGRES_PASSWORD
+        ports:
+          - name: postgres-port
+            containerPort: 5432
 ---
 apiVersion: v1
 kind: Service
@@ -44,13 +100,8 @@ spec:
       labels:
         app: web
     spec:
-      volumes:
-        - name: static
-          nfs:
-            server: diskstation.lan
-            path: /volume1/docker_web/my_cv/static
       containers:
-      - image: docker-registry.lan/django_cv_web
+      - image: docker-registry.lan/django_cv_web:latest
         name: web
         command: ["gunicorn"]
         args: ["my_cv.wsgi", "--bind", "0.0.0.0:8000"]
@@ -70,6 +121,21 @@ spec:
               configMapKeyRef:
                  name: config-env-file
                  key: DJANGO_ALLOWED_HOSTS
+          - name: DATABASE_ENGINE
+            valueFrom:
+              configMapKeyRef:
+                name: config-env-file
+                key: DATABASE_ENGINE
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: config-env-file
+                key: DATABASE_PASSWORD
+          - name: DATABASE_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: config-env-file
+                key: DATABASE_HOST
         ports:
           - name: web
             containerPort: 8000
@@ -93,15 +159,15 @@ spec:
         app: nginx
     spec:
       volumes:
-        - name: static
+        - name: mycv
           nfs:
             server: diskstation.lan
-            path: /volume1/docker_web/my_cv/static
+            path: /volume1/docker_web/my_cv
       containers:
-      - image: docker-registry.lan/django_cv_nginx
+      - image: docker-registry.lan/django_cv_nginx:latest
         volumeMounts:
-          - name: static
-            mountPath: /usr/src/app/django/my_cv/static
+          - name: mycv
+            mountPath: /usr/src/app/django/my_cv
         name: nginx
         ports:
           - name: web
