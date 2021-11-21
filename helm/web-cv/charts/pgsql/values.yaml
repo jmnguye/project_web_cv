@@ -1,0 +1,28 @@
+service:
+  port: 5432
+  targetPort: 5432
+  type: LoadBalancer
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+volume:
+  name: data
+
+nfs:
+  server: diskstation.lan
+  path: /volume1/docker_db/my_cv/data
+
+image:
+  repository: postgres
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "13.4"
+
+fullnameOverride: ""
+namespace: web-cv
+replicaCount: 1

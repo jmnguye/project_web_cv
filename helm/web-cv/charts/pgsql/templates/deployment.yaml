@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "web-cv.fullname" . }}
+  labels:
+    {{- include "web-cv.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "web-cv.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "web-cv.labels" . | nindent 8 }}
+      namespace: {{ .Values.namespace }}
+    spec:
+      volumes:
+        - name: {{ .Values.volume.name }}
+          nfs:
+            server: {{ .Values.nfs.server }}
+            path: {{ .Values.nfs.path }}
+      containers:
+      - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        name: {{ .Chart.Name }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        volumeMounts:
+          - name: {{ .Values.volume.name }}
+            mountPath: /var/lib/postgresql/data
+        env:
+          - name: PGDATA
+            value: /var/lib/postgresql/data/pgdata
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: "{{ .Release.Name }}-config-env-file"
+                key: POSTGRES_PASSWORD
+        ports:
+          - name: postgres-port
+            containerPort: 5432

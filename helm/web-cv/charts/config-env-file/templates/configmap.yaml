@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "config-env-file.fullname" . }}
+  namespace: {{ .Values.namespace }}
+data:
+  DEBUG: {{ .Values.data.DEBUG | quote }}
+  SECRET_KEY: {{ .Values.data.SECRET_KEY | quote }}
+  DJANGO_ALLOWED_HOSTS: {{ .Values.data.DJANGO_ALLOWED_HOSTS | quote }}
+  DATABASE_ENGINE: {{ .Values.data.DATABASE_ENGINE | quote }}
+  DATABASE_PASSWORD: {{ .Values.data.DATABASE_PASSWORD | quote }}
+  DATABASE_HOST: {{ .Values.data.DATABASE_HOST | quote }}
+  POSTGRES_PASSWORD: {{ .Values.data.POSTGRES_PASSWORD | quote }}

@@ -1,0 +1,10 @@
+fullnameOverride: ""
+namespace: web-cv
+data:
+  DEBUG: ""
+  SECRET_KEY: "" 
+  DJANGO_ALLOWED_HOSTS: www.adminh.fr
+  DATABASE_ENGINE: postgresql_psycopg2
+  DATABASE_PASSWORD: ""
+  DATABASE_HOST: ""
+  POSTGRES_PASSWORD: ""

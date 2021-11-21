@@ -1,0 +1,11 @@
+apiVersion: v2
+name: web-cv
+description: Web cv application
+type: application
+version: 0.1.0
+appVersion: "1.16.0"
+dependencies:
+  - name: metallb
+  - name: config-env-file
+  - name: nginx
+  - name: pgsql

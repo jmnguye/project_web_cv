@@ -1,0 +1,30 @@
+namespace: web-cv
+
+service:
+  port: 80
+  targetPort: 80
+  type: LoadBalancer
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+volume:
+  name: mycv
+
+nfs:
+  server: diskstation.lan
+  path: /volume1/docker_web/my_cv
+
+image:
+  repository: docker-registry.lan/django_cv_nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: 1.2
+
+
+fullnameOverride: ""
+replicaCount: 3
