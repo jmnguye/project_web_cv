@@ -4,6 +4,7 @@ metadata:
   name: web
   labels:
     {{- include "web-cv.labels" . | nindent 4 }}
+  namespace: {{ .Values.namespace }}
 spec:
   ports:
     - port: {{ .Values.service.port }}
