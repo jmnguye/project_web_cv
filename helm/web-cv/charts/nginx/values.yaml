@@ -4,6 +4,8 @@ service:
   port: 80
   targetPort: 80
   type: LoadBalancer
+  loadBalancerIp: 192.168.1.50
+  allowSharedIp: nginx-metallb-svc
 
 autoscaling:
   enabled: false
@@ -27,4 +29,4 @@ image:
 
 
 fullnameOverride: ""
-replicaCount: 3
+replicaCount: 1

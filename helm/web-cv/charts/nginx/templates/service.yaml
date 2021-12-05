@@ -5,6 +5,8 @@ metadata:
   labels:
     {{- include "nginx.labels" . | nindent 4 }}  
   namespace: {{ .Values.namespace }}
+  annotations:
+    metallb.universe.tf/allow-shared-ip: {{ .Values.service.allowSharedIp }}
 spec:
   ports:
     - protocol: TCP
@@ -13,3 +15,4 @@ spec:
   selector:
     {{- include "nginx.selectorLabels" . | nindent 4 }}
   type: {{ .Values.service.type }}
+  loadBalancerIP: {{ .Values.service.loadBalancerIp }}
