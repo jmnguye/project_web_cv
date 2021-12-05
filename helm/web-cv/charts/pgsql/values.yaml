@@ -26,5 +26,5 @@ image:
   tag: "13.4"
 
 fullnameOverride: ""
-namespace: web-cv
+namespace: dev-web-cv
 replicaCount: 1
