@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # config-env-file
-web-cv/charts/config-env-file/values.yaml
+charts/config-env-file/values.yaml
