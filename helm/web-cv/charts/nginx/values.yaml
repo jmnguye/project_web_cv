@@ -1,7 +1,7 @@
-namespace: web-cv
+namespace: dev-web-cv
 
 service:
-  port: 80
+  port: 8080
   targetPort: 80
   type: LoadBalancer
   loadBalancerIp: 192.168.1.50
@@ -25,8 +25,8 @@ image:
   repository: docker-registry.lan/django_cv_nginx
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.2
+  tag: 1.3
 
 
 fullnameOverride: ""
-replicaCount: 3
+replicaCount: 1
