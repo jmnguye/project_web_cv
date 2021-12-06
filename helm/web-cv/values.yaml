@@ -4,6 +4,8 @@
 
 replicaCount: 3
 
+namespace: web-cv
+
 image:
   repository: docker-registry.lan/django_cv_web
   pullPolicy: IfNotPresent
